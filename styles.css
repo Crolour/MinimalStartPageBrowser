@@ -1,0 +1,312 @@
+/* Общие стили */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #1e1e1e;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  gap: 40px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+.left-section {
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.right-section {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.illustration {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.terminal {
+  font-size: 24px;
+  font-family: 'Courier New', Courier, monospace;
+  color: #ffcc66;
+  display: flex;
+  align-items: center;
+}
+
+#searchInput {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  font-family: 'Courier New', Courier, monospace;
+  margin-left: 10px;
+  outline: none;
+  width: 300px;
+  transition: border-color 0.3s ease;
+  padding-bottom: 4px;
+}
+
+#searchInput:focus {
+  border-bottom-color: #fff;
+}
+
+.links {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 30px;
+  padding-top: 10px;
+  scrollbar-width: thin;
+  -ms-overflow-style: none;
+}
+
+.links::-webkit-scrollbar {
+  width: 6px;
+}
+.links::-webkit-scrollbar-track {
+  background: transparent;
+}
+.links::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 3px;
+}
+
+.category {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 120px;
+}
+
+.label {
+  font-weight: bold;
+  color: #999;
+  text-transform: uppercase;
+  font-size: 16px;
+}
+
+a {
+  text-decoration: none;
+  color: #ffcc66;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #fff;
+}
+
+.settings-link {
+  font-size: 16px;
+  color: #999;
+  cursor: pointer;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  transition: color 0.3s ease;
+  z-index: 999;
+}
+
+.settings-link:hover {
+  color: #fff;
+}
+
+.settings-menu {
+  position: absolute;
+  right: 40px;
+  bottom: 60px;
+  background-color: #2e2e2e;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 15px;
+  width: 250px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.settings-menu.active {
+  display: flex;
+}
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 20px;
+  color: #888;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #fff;
+}
+
+.settings-content {
+  margin-top: 25px;
+}
+
+/* Выравнивание текста и switch в одной строке */
+.theme-setting,
+.image-setting {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 15px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #007acc;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #007acc;
+}
+
+input:checked + .slider:before {
+  transform: translateX(16px);
+}
+
+/* Темы */
+body.dark-theme {
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+body.light-theme {
+  background-color: #f5f5f5;
+  color: #000;
+}
+
+body.dark-theme a {
+  color: #ffcc66;
+}
+
+body.light-theme a {
+  color: #007acc;
+}
+
+body.dark-theme .links::-webkit-scrollbar-thumb {
+  background: #444;
+}
+
+body.light-theme .links::-webkit-scrollbar-thumb {
+  background: #aaa;
+}
+
+body.light-theme .settings-menu {
+  background-color: #f5f5f5;
+  border-color: #ddd;
+  color: #000;
+}
+
+/* Сетка миниатюр */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 10px;
+  scrollbar-width: none;
+}
+
+.image-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.image-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.image-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.image-item img:hover {
+  transform: scale(1.05);
+}
+
+.delete-button {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 14px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.delete-button:hover {
+  color: #ffcc66;
+}

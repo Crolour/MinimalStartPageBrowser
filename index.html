@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Start Page</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="dark-theme">
+  <div class="container">
+    <!-- Левая секция с изображением -->
+    <div class="left-section">
+      <img src="images/image1.gif" alt="Person at a computer" class="illustration">
+    </div>
+
+    <!-- Правая секция с терминалом и ссылками -->
+    <div class="right-section">
+      <div class="terminal">
+        <span>> cd ~/</span>
+        <input type="text" id="searchInput" placeholder="Search..." autocomplete="on" />
+      </div>
+
+      <!-- Блоки ссылок -->
+      <div class="links">
+        <div class="category">
+          <span class="label">social</span>
+          <a href="https://vk.com/im  " target="_blank">vkontakte</a>
+          <a href="https://www.reddit.com  " target="_blank">reddit</a>
+        </div>
+        <div class="category">
+          <span class="label">work</span>
+          <a href="https://www.icloud.com/  " target="_blank">iCloud</a>
+          <a href="https://system.fgoupsk.ru/student/  " target="_blank">Psk</a>
+        </div>
+        <div class="category">
+          <span class="label">dev</span>
+          <a href="https://github.com  " target="_blank">github</a>
+          <a href="https://gitflic.ru/user/abrikosv  " target="_blank">gitflic</a>
+          <a href="https://news.ycombinator.com  " target="_blank">hackernews</a>
+          <a href="https://devdocs.io  " target="_blank">devdocs</a>
+        </div>
+        <div class="category">
+          <span class="label">intelligence</span>
+          <a href="https://chat.qwen.ai  " target="_blank">qwen</a>
+          <a href="https://www.perplexity.ai/  " target="_blank">perplexity</a>
+        </div>
+        <div class="category">
+          <span class="label">wath</span>
+          <a href="https://anilibria.wtf  " target="_blank">anilibria</a>
+          <a href="https://www.youtube.com  " target="_blank">youtube</a>
+          <a href="https://www.twitch.tv  " target="_blank">twitch</a>
+          <a href="https://hd.kinopoisk.ru/  " target="_blank">kinopoisk</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Строчка Settings -->
+  <div class="settings-link">settings</div>
+
+  <!-- Меню настроек -->
+  <div class="settings-menu" id="settingsMenu">
+    <span class="close-btn" id="closeBtn">×</span>
+    <div class="settings-content">
+      <!-- Переключатель темы -->
+      <div class="theme-setting">
+        <p>Theme:</p>
+        <label class="theme-switch">
+          <input type="checkbox" id="themeSwitch">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- Кнопка Images -->
+      <div class="image-setting">
+        <p>Images:</p>
+        <button id="openImagePicker">Choose Image</button>
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+      </div>
+
+      <!-- Сетка миниатюр -->
+      <div id="imageGrid" class="image-grid"></div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Установить фокус при загрузке
+    window.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('searchInput');
+      searchInput.focus();
+
+      // Загрузить сохранённое изображение
+      const savedImage = localStorage.getItem('selectedImage');
+      if (savedImage) {
+        document.querySelector('.illustration').src = savedImage;
+      }
+
+      // Отобразить миниатюры
+      const savedImages = JSON.parse(localStorage.getItem('selectedImages')) || [];
+      displayImages(savedImages);
+    });
+
+    // Поиск по Enter
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        const query = encodeURIComponent(searchInput.value);
+        window.location.href = `https://yandex.ru/search/?text=${query}`;
+      }
+    });
+
+    // Работа меню настроек
+    const settingsLink = document.querySelector('.settings-link');
+    const settingsMenu = document.getElementById('settingsMenu');
+    const closeBtn = document.getElementById('closeBtn');
+
+    settingsLink.addEventListener('click', (e) => {
+      e.stopPropagation();
+      settingsMenu.classList.add('active');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      settingsMenu.classList.remove('active');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!settingsMenu.contains(e.target) && !settingsLink.contains(e.target)) {
+        settingsMenu.classList.remove('active');
+      }
+    });
+
+    // Переключение темы
+    const themeSwitch = document.getElementById('themeSwitch');
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.body.classList.replace('dark-theme', 'light-theme');
+      themeSwitch.checked = true;
+    }
+
+    themeSwitch.addEventListener('change', () => {
+      if (themeSwitch.checked) {
+        document.body.classList.replace('dark-theme', 'light-theme');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.body.classList.replace('light-theme', 'dark-theme');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    // Функция для отображения миниатюр изображений
+    function displayImages(images) {
+      const imageGrid = document.getElementById('imageGrid');
+      imageGrid.innerHTML = '';
+      images.forEach(image => {
+        const imgContainer = document.createElement('div');
+        imgContainer.classList.add('image-item');
+
+        const img = document.createElement('img');
+        img.src = image;
+        img.alt = image;
+        img.addEventListener('click', () => selectImage(image));
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = '❌';
+        deleteButton.classList.add('delete-button');
+        deleteButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deleteImage(image);
+        });
+
+        imgContainer.appendChild(img);
+        imgContainer.appendChild(deleteButton);
+        imageGrid.appendChild(imgContainer);
+      });
+    }
+
+    // Функция для выбора изображения
+    function selectImage(image) {
+      localStorage.setItem('selectedImage', image);
+      const illustrationImg = document.querySelector('.illustration');
+      illustrationImg.src = image;
+
+      // Закрываем меню после выбора изображения
+      document.getElementById('settingsMenu').classList.remove('active');
+    }
+
+    // Функция для удаления изображения
+    function deleteImage(image) {
+      const images = JSON.parse(localStorage.getItem('selectedImages')) || [];
+      const index = images.indexOf(image);
+      if (index !== -1) {
+        images.splice(index, 1); // Удаляем изображение из массива
+        localStorage.setItem('selectedImages', JSON.stringify(images));
+        displayImages(images); // Обновляем сетку
+      }
+    }
+
+    // Диалог выбора файла
+    const openImagePicker = document.getElementById('openImagePicker');
+    const imageInput = document.getElementById('imageInput');
+
+    openImagePicker.addEventListener('click', () => {
+      imageInput.click();
+    });
+
+    imageInput.addEventListener('change', (e) => {
+      const files = e.target.files;
+      if (!files.length) return;
+
+      const images = JSON.parse(localStorage.getItem('selectedImages')) || [];
+      const reader = new FileReader();
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        reader.onload = (event) => {
+          images.push(event.target.result); // Добавляем Base64 URL
+          localStorage.setItem('selectedImages', JSON.stringify(images));
+          displayImages(images);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // При загрузке страницы проверяем, есть ли сохранённое изображение
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedImage = localStorage.getItem('selectedImage');
+      if (savedImage) {
+        document.querySelector('.illustration').src = savedImage;
+      }
+
+      const savedImages = JSON.parse(localStorage.getItem('selectedImages')) || [];
+      displayImages(savedImages);
+    });
+  </script>
+</body>
+</html>
